@@ -1,0 +1,46 @@
+name: Triage de Issues con Claude
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  triage:
+    # En 'edited' solo corre si cambió el cuerpo o el título (no otros campos del payload)
+    if: |
+      github.event.action == 'opened' ||
+      github.event.changes.body != null ||
+      github.event.changes.title != null
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: triage-issue-${{ github.event.issue.number }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code for Issue Triage
+        uses: anthropics/claude-code-action@v1
+        env:
+          # Autentica al gh CLI que usan las tools Bash de Claude dentro del comando /triage-issue
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # Token inyectado automáticamente por Actions (no es un secret a configurar). Se usa
+          # solo para las llamadas a la API de GitHub (labels, comentarios); al no ser la app de
+          # Claude, GitHub no vuelve a disparar este workflow por los propios comentarios/labels
+          # del bot, evitando un bucle.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+          prompt: "/triage-issue REPO: ${{ github.repository }} ISSUE: ${{ github.event.issue.number }} ACCION: ${{ github.event.action }}"
+
+          claude_args: |
+            --max-turns 25
