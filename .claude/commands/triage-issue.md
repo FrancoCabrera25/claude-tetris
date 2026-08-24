@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(gh label list:*), Bash(gh issue view:*), Bash(gh search issues:*), Bash(gh issue comment:*), Bash(./.github/scripts/triage-labels.sh:*), Read, Grep, Glob
+allowed-tools: Bash(gh label list:*), Bash(gh issue view:*), Bash(gh search issues:*), Bash(gh issue comment:*), Bash(./.github/scripts/triage-labels.sh:*), Read, Grep, Glob, Write
 description: Analiza un issue, le aplica labels y publica un diagnóstico técnico
 ---
 
