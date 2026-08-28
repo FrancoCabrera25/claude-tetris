@@ -1,0 +1,117 @@
+/* ---- Menú de pausa ---- */
+.pause-menu {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+  border-radius: 4px;
+}
+
+.pause-menu-box {
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 0 40px var(--board-shadow);
+}
+
+.pause-menu-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--overlay-title);
+  margin-bottom: 4px;
+}
+
+.pause-menu-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-btn {
+  background: var(--panel-bg);
+  color: var(--fg);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pm-btn:hover {
+  border-color: var(--accent);
+}
+
+.pm-btn-primary {
+  background: var(--restart-bg);
+  color: var(--restart-text);
+  border-color: var(--restart-bg);
+}
+
+.pm-btn-primary:hover {
+  background: var(--restart-hover);
+  border-color: var(--restart-hover);
+}
+
+.pm-level-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.pm-level-row label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--label-color);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pm-level-row select {
+  background: var(--kbd-bg);
+  color: var(--fg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.pm-controls-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-controls-list li {
+  font-size: 13px;
+  color: var(--control-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Debe ir al final del archivo: en el cascade, ante empate de especificidad
+   gana la última regla, y este selector se combina con otras clases que
+   también fijan `display` (p.ej. .pause-menu, .pause-menu-view). */
+.pause-menu-hidden {
+  display: none;
+}
