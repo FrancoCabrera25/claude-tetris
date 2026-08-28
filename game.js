@@ -46,6 +46,14 @@ const THEME_KEY = 'tetris-theme';
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
 let gridColor, blockHighlight;
 
+// --- Puntos de extensión compartidos: no modificar sin coordinar ---
+const hooks = { ready: [], init: [], pause: [], resume: [], gameOver: [], linesCleared: [], inputLock: [], drawBlock: [] };
+let activePalette = COLORS;
+let startLevel = 1;
+function on(evt, fn) { hooks[evt].push(fn); }
+function emit(evt, arg) { for (const fn of hooks[evt]) fn(arg); }
+function inputLocked() { return hooks.inputLock.some(fn => fn()); }
+
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
 }
@@ -113,6 +121,7 @@ function clearLines() {
     level = Math.floor(lines / 10) + 1;
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
+    emit('linesCleared', cleared);
   }
 }
 
@@ -162,7 +171,8 @@ function updateHUD() {
 
 function drawBlock(context, x, y, colorIndex, size, alpha) {
   if (!colorIndex) return;
-  const color = COLORS[colorIndex];
+  if (hooks.drawBlock.length) { hooks.drawBlock[0](context, x, y, colorIndex, size, alpha); return; }
+  const color = activePalette[colorIndex];
   context.globalAlpha = alpha ?? 1;
   context.fillStyle = color;
   context.fillRect(x * size + 1, y * size + 1, size - 2, size - 2);
@@ -228,6 +238,7 @@ function endGame() {
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
   overlay.classList.remove('hidden');
+  emit('gameOver');
 }
 
 function togglePause() {
@@ -236,11 +247,13 @@ function togglePause() {
   if (!paused) {
     lastTime = performance.now();
     loop(lastTime);
+    emit('resume');
   } else {
     cancelAnimationFrame(animId);
     overlayTitle.textContent = 'PAUSA';
     overlayScore.textContent = '';
     overlay.classList.remove('hidden');
+    emit('pause');
   }
 }
 
@@ -289,10 +302,10 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = startLevel;
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = Math.max(100, 1000 - (level - 1) * 90);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
@@ -301,10 +314,12 @@ function init() {
   overlay.classList.add('hidden');
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
+  emit('init');
 }
 
 document.addEventListener('keydown', e => {
   if (e.code === 'KeyP') { togglePause(); return; }
+  if (inputLocked()) return;
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -331,4 +346,4 @@ document.addEventListener('keydown', e => {
 restartBtn.addEventListener('click', init);
 
 initTheme();
-init();
+window.addEventListener('DOMContentLoaded', () => { emit('ready'); init(); });
