@@ -1,0 +1,24 @@
+/* ---- Selector de skin ---- */
+#skin-select {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--fg);
+  border-radius: 6px;
+  height: 32px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+#skin-select:hover,
+#skin-select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ---- Skin: Neón ---- */
+body[data-skin="neon"] #board {
+  background: #000;
+}

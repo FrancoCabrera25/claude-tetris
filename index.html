@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tetris</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="skins.css" />
 </head>
 <body>
   <div class="wrapper">
     <div class="header-row">
       <h1 class="game-title">TETRIS <span>NEON</span></h1>
+      <select id="skin-select" aria-label="Cambiar skin" title="Cambiar skin">
+        <option value="retro">Retro</option>
+        <option value="neon">Neón</option>
+        <option value="pastel">Pastel</option>
+        <option value="pixel">Pixel Art</option>
+      </select>
       <button id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
     </div>
 
@@ -52,11 +59,13 @@
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
+        <div id="overlay-extra"></div>
         <button id="restart-btn">Reiniciar</button>
       </div>
     </div>
   </div>
 
   <script src="game.js"></script>
+  <script src="skins.js"></script>
 </body>
 </html>
