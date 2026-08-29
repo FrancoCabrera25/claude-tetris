@@ -169,9 +169,7 @@ function updateHUD() {
   levelEl.textContent = level;
 }
 
-function drawBlock(context, x, y, colorIndex, size, alpha) {
-  if (!colorIndex) return;
-  if (hooks.drawBlock.length) { hooks.drawBlock[0](context, x, y, colorIndex, size, alpha); return; }
+function drawDefaultBlock(context, x, y, colorIndex, size, alpha) {
   const color = activePalette[colorIndex];
   context.globalAlpha = alpha ?? 1;
   context.fillStyle = color;
@@ -180,6 +178,12 @@ function drawBlock(context, x, y, colorIndex, size, alpha) {
   context.fillStyle = blockHighlight;
   context.fillRect(x * size + 1, y * size + 1, size - 2, 4);
   context.globalAlpha = 1;
+}
+
+function drawBlock(context, x, y, colorIndex, size, alpha) {
+  if (!colorIndex) return;
+  if (hooks.drawBlock.length) { hooks.drawBlock[0](context, x, y, colorIndex, size, alpha); return; }
+  drawDefaultBlock(context, x, y, colorIndex, size, alpha);
 }
 
 function drawGrid() {
@@ -274,12 +278,16 @@ function loop(ts) {
   animId = requestAnimationFrame(loop);
 }
 
-function applyTheme(theme, repaint) {
-  document.documentElement.setAttribute('data-theme', theme);
-  themeToggleBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+function refreshCanvasVars() {
   const styles = getComputedStyle(document.documentElement);
   gridColor = styles.getPropertyValue('--grid-color').trim();
   blockHighlight = styles.getPropertyValue('--block-highlight').trim();
+}
+
+function applyTheme(theme, repaint) {
+  document.documentElement.setAttribute('data-theme', theme);
+  themeToggleBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+  refreshCanvasVars();
   if (repaint) {
     draw();
     drawNext();
