@@ -15,7 +15,7 @@ const pauseMenu = document.createElement('div');
 pauseMenu.id = 'pause-menu';
 pauseMenu.className = 'pause-menu pause-menu-hidden';
 pauseMenu.innerHTML = `
-  <div class="pause-menu-box">
+  <div class="pause-menu-box" role="dialog" aria-modal="true" aria-label="Menú de pausa">
     <p class="pause-menu-title">PAUSA</p>
 
     <div id="pm-view-main" class="pause-menu-view">
@@ -31,7 +31,7 @@ pauseMenu.innerHTML = `
     <div id="pm-view-controls" class="pause-menu-view pause-menu-hidden">
       <ul class="pm-controls-list">
         <li><kbd>←</kbd><kbd>→</kbd> mover</li>
-        <li><kbd>↑</kbd> rotar</li>
+        <li><kbd>↑</kbd><kbd>X</kbd> rotar</li>
         <li><kbd>↓</kbd> bajar</li>
         <li><kbd>Space</kbd> caída</li>
         <li><kbd>P</kbd> pausa</li>
@@ -68,9 +68,11 @@ function showView(view) {
   if (view === 'controls') {
     pmViewMain.classList.add('pause-menu-hidden');
     pmViewControls.classList.remove('pause-menu-hidden');
+    pmBackBtn.focus();
   } else {
     pmViewControls.classList.add('pause-menu-hidden');
     pmViewMain.classList.remove('pause-menu-hidden');
+    pmControlsBtn.focus();
   }
 }
 
@@ -81,6 +83,7 @@ function openMenu() {
   // El overlay simple de PAUSA queda reemplazado visualmente por este menú.
   overlay.classList.add('hidden');
   pauseMenu.classList.remove('pause-menu-hidden');
+  pmResumeBtn.focus();
 }
 
 function closeMenu() {
@@ -114,8 +117,12 @@ pmLevelSelect.addEventListener('change', () => {
 document.addEventListener('keydown', e => {
   if (e.code !== 'Escape') return;
   if (gameOver) return;
-  // Pausar/reanudar/cerrar el menú vía Escape, tanto desde la vista principal
-  // como desde la sub-vista de controles.
+  // Desde la sub-vista de controles, Escape vuelve a la vista principal en
+  // vez de reanudar directamente; solo reanuda cuando ya está en la principal.
+  if (menuOpen && menuView === 'controls') {
+    showView('main');
+    return;
+  }
   togglePause();
 });
 
