@@ -18,7 +18,119 @@
   outline: none;
 }
 
+/*
+ * Cada skin redefine el set completo de variables de :root (style.css) para cambiar la
+ * apariencia entera de la UI, no solo los bloques del tablero. Retro no aparece aquí a
+ * propósito: al no tener overrides, hereda :root / :root[data-theme="light"] y por eso
+ * sigue respondiendo al toggle de tema.
+ *
+ * data-skin vive en <html>, igual que data-theme, así que ambos selectores tienen la misma
+ * especificidad (0,2,0). Este archivo se enlaza después de style.css en index.html, así que
+ * ante ese empate el skin siempre gana sobre el tema — ver skins.js.
+ */
+
 /* ---- Skin: Neón ---- */
-body[data-skin="neon"] #board {
+:root[data-skin="neon"] {
+  --bg: #05050a;
+  --fg: #e8fdff;
+  --accent: #00f6ff;
+  --panel-border: #1a2a3a;
+  --panel-bg: #050508;
+  --label-color: #4a7a8a;
+  --control-text: #7ab8c4;
+  --kbd-bg: #0d1520;
+  --kbd-border: #1a3a45;
+  --kbd-text: #8fd8e0;
+  --overlay-bg: rgba(0, 0, 0, 0.82);
+  --overlay-title: #ff00ea;
+  --restart-bg: #00f6ff;
+  --restart-text: #05050a;
+  --restart-hover: #6dffff;
+  --board-shadow: rgba(0, 246, 255, 0.35);
+  --grid-color: #0d2a30;
+  --block-highlight: rgba(255, 255, 255, 0.25);
+}
+
+:root[data-skin="neon"] #board,
+:root[data-skin="neon"] #next-canvas {
   background: #000;
+}
+
+/* ---- Skin: Pastel ---- */
+:root[data-skin="pastel"] {
+  --bg: #fdf6f0;
+  --fg: #4a4458;
+  --accent: #b892e8;
+  --panel-border: #ecdcf0;
+  --panel-bg: #ffffff;
+  --label-color: #b09ac0;
+  --control-text: #8a7a9a;
+  --kbd-bg: #f5e9f7;
+  --kbd-border: #e6d2ec;
+  --kbd-text: #7a6a8a;
+  --overlay-bg: rgba(253, 246, 240, 0.9);
+  --overlay-title: #e88fa8;
+  --restart-bg: #b892e8;
+  --restart-text: #ffffff;
+  --restart-hover: #c9a8f0;
+  --board-shadow: rgba(184, 146, 232, 0.2);
+  --grid-color: #f2e4f5;
+  --block-highlight: rgba(255, 255, 255, 0.55);
+}
+
+:root[data-skin="pastel"] #board,
+:root[data-skin="pastel"] #next-canvas,
+:root[data-skin="pastel"] #start-scores,
+:root[data-skin="pastel"] .pause-menu-box,
+:root[data-skin="pastel"] #start-play-btn,
+:root[data-skin="pastel"] #start-reset-btn,
+:root[data-skin="pastel"] #scores-save-btn,
+:root[data-skin="pastel"] #restart-btn,
+:root[data-skin="pastel"] .pm-btn,
+:root[data-skin="pastel"] #skin-select,
+:root[data-skin="pastel"] #theme-toggle,
+:root[data-skin="pastel"] #scores-name-input {
+  border-radius: 14px;
+}
+
+/* ---- Skin: Pixel Art ---- */
+:root[data-skin="pixel"] {
+  --bg: #10142c;
+  --fg: #d8e0ff;
+  --accent: #ffd600;
+  --panel-border: #2c3466;
+  --panel-bg: #16213e;
+  --label-color: #5a6aa0;
+  --control-text: #8a96c8;
+  --kbd-bg: #0d1226;
+  --kbd-border: #2c3466;
+  --kbd-text: #b8c0f0;
+  --overlay-bg: rgba(10, 12, 30, 0.88);
+  --overlay-title: #ff5252;
+  --restart-bg: #ffd600;
+  --restart-text: #10142c;
+  --restart-hover: #ffe666;
+  --board-shadow: rgba(0, 0, 0, 0.5);
+  --grid-color: #232c54;
+  --block-highlight: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-skin="pixel"] #board,
+:root[data-skin="pixel"] #next-canvas,
+:root[data-skin="pixel"] #start-scores,
+:root[data-skin="pixel"] .pause-menu-box,
+:root[data-skin="pixel"] #start-play-btn,
+:root[data-skin="pixel"] #start-reset-btn,
+:root[data-skin="pixel"] #scores-save-btn,
+:root[data-skin="pixel"] #restart-btn,
+:root[data-skin="pixel"] .pm-btn,
+:root[data-skin="pixel"] #skin-select,
+:root[data-skin="pixel"] #theme-toggle,
+:root[data-skin="pixel"] #scores-name-input,
+:root[data-skin="pixel"] kbd {
+  border-radius: 0;
+}
+
+:root[data-skin="pixel"] body {
+  font-family: 'Courier New', Courier, monospace;
 }

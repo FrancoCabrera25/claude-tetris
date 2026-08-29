@@ -53,7 +53,7 @@
 }
 
 #start-play-btn,
-#start-reset-btn,
+.scores-reset-btn,
 #scores-save-btn {
   border: none;
   border-radius: 6px;
@@ -74,15 +74,84 @@
   background: var(--restart-hover);
 }
 
-#start-reset-btn {
+.scores-reset-btn {
+  width: 100%;
   background: transparent;
   color: var(--fg);
   border: 1px solid var(--panel-border);
 }
 
-#start-reset-btn:hover {
+.scores-reset-btn:hover {
   border-color: var(--overlay-title);
   color: var(--overlay-title);
+}
+
+/* ---- Confirmación inline de reset (reemplaza al confirm() nativo) ---- */
+.scores-reset-confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg);
+}
+
+.scores-reset-confirm button {
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  background: transparent;
+  color: var(--fg);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scores-reset-yes {
+  border-color: var(--overlay-title) !important;
+  color: var(--overlay-title) !important;
+}
+
+.scores-reset-yes:hover {
+  background: var(--overlay-title);
+  color: var(--restart-text) !important;
+}
+
+.scores-reset-no:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- Estadísticas globales (mejor combo / líneas máximas) ---- */
+.scores-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.scores-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.scores-stat-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--label-color);
+  font-weight: 600;
+}
+
+.scores-stat-value {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 /* ---- Tabla de records (compartida entre inicio y game over) ---- */
@@ -117,6 +186,14 @@
   color: var(--accent);
   font-weight: 700;
   background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Fila provisional: el puesto que ocuparía la partida recién terminada,
+   mostrada antes de guardar el nombre. Variante punteada del resaltado. */
+.scores-table tr.scores-pending td {
+  border-top: 1px dashed var(--accent);
+  border-bottom: 1px dashed var(--accent);
+  font-style: italic;
 }
 
 .scores-empty {

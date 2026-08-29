@@ -17,6 +17,7 @@ Implementación del clásico **Tetris** en JavaScript vanilla, usando HTML5 Canv
     - [Opción 1: abrir el archivo directamente](#opción-1-abrir-el-archivo-directamente)
     - [Opción 2: servidor local (recomendado)](#opción-2-servidor-local-recomendado)
   - [Controles](#controles)
+  - [Skins visuales](#skins-visuales)
   - [Cómo funciona](#cómo-funciona)
     - [1. `index.html`](#1-indexhtml)
     - [2. `style.css`](#2-stylecss)
@@ -42,6 +43,13 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Sistema de puntuación** clásico de Tetris (100 / 300 / 500 / 800 multiplicado por nivel).
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
 - **Pausa** y **Game Over** con opción de reinicio.
+- **Pantalla de inicio** con acceso a la tabla de records antes de empezar a jugar.
+- **Tabla de records local** (top 5, guardada en `localStorage`): pide el nombre del jugador al
+  llegar al game over, se muestra en la pantalla de inicio y en el overlay de game over, resalta
+  en qué puesto entraría la partida actual, y tiene botón de reseteo.
+- **Sistema de combos**: se lleva la cuenta de despejes de línea consecutivos (sin que una pieza
+  bloquee sin despejar) y se guarda el mejor combo y el máximo de líneas conseguidos, tanto por
+  record como de forma global entre todas las partidas.
 
 ---
 
@@ -88,9 +96,31 @@ Después abre `http://localhost:8000` en el navegador.
 
 ---
 
+## Skins visuales
+
+El selector de la cabecera (`#skin-select`) cambia la apariencia completa del juego entre
+cuatro temas, sin recargar la página:
+
+| Skin        | Estilo                                                                 |
+| ----------- | ----------------------------------------------------------------------- |
+| **Retro**   | Bloques planos, colores originales; sigue el toggle de tema claro/oscuro |
+| **Neón**    | Fondo negro, colores flúo y *glow* (`shadowBlur`) alrededor de cada bloque |
+| **Pastel**  | Paleta suave y bordes redondeados en bloques, canvas y botones          |
+| **Pixel Art** | Paleta saturada, textura de dithering y bordes duros de 8 bits, sin bordes redondeados |
+
+Cada skin redefine el mismo set de variables CSS que usa el resto de la interfaz
+(`--bg`, `--panel-bg`, `--accent`, `--grid-color`, etc.), así que el cambio alcanza al panel
+lateral, la pantalla de inicio, el menú de pausa y el overlay de game over, no solo al tablero.
+Neón, Pastel y Pixel Art fijan su propia paleta e ignoran el toggle de tema; solo **Retro** no
+declara overrides propios, por eso es el único que sigue respondiendo a 🌙/☀️.
+
+La preferencia se guarda en `localStorage` bajo la clave `tetris-skin` y se restaura al recargar.
+
+---
+
 ## Cómo funciona
 
-El juego se compone de tres archivos que cooperan:
+El juego se compone de varios archivos que cooperan:
 
 ### 1. `index.html`
 
@@ -173,11 +203,13 @@ Algunos parámetros fáciles de tunear en `game.js`:
 | `COLS`         | Columnas del tablero                     | `10`                  |
 | `ROWS`         | Filas del tablero                        | `20`                  |
 | `BLOCK`        | Tamaño en píxeles de cada celda          | `30`                  |
-| `COLORS`       | Paleta de colores por tipo de pieza      | 7 colores             |
+| `COLORS`       | Paleta base de colores por tipo de pieza (skin Retro) | 7 colores |
 | `LINE_SCORES`  | Puntos por 1, 2, 3 o 4 líneas eliminadas | `[0,100,300,500,800]` |
 | `dropInterval` | Velocidad inicial de caída en ms         | `1000`                |
 
 > Si cambias `COLS`, `ROWS` o `BLOCK`, recuerda ajustar también `width` y `height` del `<canvas id="board">` en `index.html` para que coincida (`COLS × BLOCK` × `ROWS × BLOCK`).
+
+> En tiempo de ejecución el juego dibuja siempre con `activePalette` (definida en `skins.js`), que apunta a `COLORS` cuando el skin activo es Retro y a la paleta del skin en los demás casos — ver [Skins visuales](#skins-visuales).
 
 ---
 
